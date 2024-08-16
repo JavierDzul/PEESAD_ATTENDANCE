@@ -1,0 +1,1 @@
+export {CarrerPage} from "./pages/CarrerPage";

@@ -1,0 +1,23 @@
+.attendance-icon-container {
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .attendance-icon-container:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  .no-pointer {
+    cursor: default !important;
+  }
+  .attendance-icon-container {
+    position: relative;
+  }
+  
+  .attendance-icon-container:hover {
+    z-index: 3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  

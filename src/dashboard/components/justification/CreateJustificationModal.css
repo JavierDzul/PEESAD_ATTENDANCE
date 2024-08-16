@@ -1,0 +1,23 @@
+.modal-header-custom {
+    background-color: #490d1d;
+    color: white;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-footer-custom {
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .form-control {
+    border-radius: 0.5rem;
+  }
+  
+  .form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+  }
+  
+  textarea.form-control {
+    resize: none;
+  }
+  
