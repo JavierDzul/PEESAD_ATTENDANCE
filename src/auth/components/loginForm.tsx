@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCreateUserMutation } from '../../services/api/userApi';
 import { loginSuccess, logout, setIsLoading, setIsLoadingRole, setTypeUser } from '../../store/auth/authSlice';
 import Swal from 'sweetalert2';
+import logo from "./../../assets/logoCompleto.png"
 
 
 export const LoginForm: React.FC = () => {
@@ -107,7 +108,7 @@ export const LoginForm: React.FC = () => {
             
                 <div className='d-flex flex-column align-items-center justify-content-center'>
                       <div className="d-flex justify-content-center mt-5">
-                        <img src="src/assets/logoCompleto.png" alt="escudo-y-logo" width={320} />
+                        <img src={logo} alt="escudo-y-logo" width={320} />
                     </div>
                     <div className="text-center p-5">
                         <div className="spinner-border text-primary" role="status">
