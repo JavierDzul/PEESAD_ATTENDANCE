@@ -4,12 +4,19 @@ import { axiosWithToken } from '../../../../helpers/axios';
 export const fetchPartialsData = async (idClass: number) => {
   try {
     const response = await axiosWithToken(`/partial/findAll?classId=${idClass}&page=1&limit=100`);
-    return response.data.data;
+    const partialsData = response.data;
+    if (Array.isArray(partialsData)) {
+      return partialsData;
+    } else {
+      console.error("Expected an array for partials data but received:", partialsData);
+      return [];
+    }
   } catch (error) {
     console.error("Error fetching partials", error);
     return [];
   }
 };
+
 
 export const createAttendance = async (classId: number, partialId: number, attendanceDate: string, state: number) => {
   try {
