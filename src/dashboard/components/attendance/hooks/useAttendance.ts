@@ -1,18 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-axios.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
+import { axiosWithToken } from '../../../../helpers/axios';
 
 export const useAttendance = (idClass: number) => {
   const [partials, setPartials] = useState<any[]>([]);
@@ -20,13 +7,7 @@ export const useAttendance = (idClass: number) => {
 
   const fetchPartials = async () => {
     try {
-      const response = await axios.get(`https://academico.peesadqroo.com/api/partial/findAll`, {
-        params: {
-          classId: idClass,
-          page: 1,
-          limit: 100
-        }
-      });
+      const response = await axiosWithToken(`/partial/findAll?classId=${idClass}&page=1&limit=100`);
       setPartials(response.data.data);
       if (response.data.data.length > 0) {
         setSelectedPartial(response.data.data[response.data.data.length - 1]);

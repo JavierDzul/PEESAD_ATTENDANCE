@@ -1,28 +1,9 @@
-import axios from 'axios';
+import { axiosWithToken } from '../../../../helpers/axios';
 
-const accessToken = localStorage.getItem('token') || '';
-
-axios.interceptors.request.use(
-  config => {
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
 
 export const fetchPartialsData = async (idClass: number) => {
   try {
-    const response = await axios.get(`https://academico.peesadqroo.com/api/partial/findAll`, {
-      params: {
-        classId: idClass,
-        page: 1,
-        limit: 100
-      }
-    });
+    const response = await axiosWithToken(`/partial/findAll?classId=${idClass}&page=1&limit=100`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching partials", error);
@@ -32,26 +13,27 @@ export const fetchPartialsData = async (idClass: number) => {
 
 export const createAttendance = async (classId: number, partialId: number, attendanceDate: string, state: number) => {
   try {
-    const response = await axios.post("https://academico.peesadqroo.com/api/attendance/bulk-create", {
+    const response = await axiosWithToken(`/attendance/bulk-create`, {
       classId,
       partialId,
       day: new Date(attendanceDate),
       state,
-    });
-    return response.data;
-  } catch (error:any) {
-    throw new Error(error);
+    }, 'POST');
+    return response;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
 
+
 export const createPartial = async (classId: number, title: string) => {
   try {
-    const response = await axios.post("https://academico.peesadqroo.com/api/partial/create", {
+    const response = await axiosWithToken(`/partial/create`, {
       title,
       classId,
-    });
-    return response.data;
-  } catch (error:any) {
-    throw new Error(error);
+    }, 'POST');
+    return response;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };
