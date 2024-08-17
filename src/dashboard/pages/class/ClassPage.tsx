@@ -32,7 +32,7 @@ export default function ClassPage() {
   useEffect(() => {
     axios
       .get<ApiResponseAll<Package>>(
-        'http://localhost:3000/api/package/findAll?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/package/findAll?page=1&limit=0&isActive=true',
       )
       .then((res) => {
         const data = res.data.data;
@@ -68,7 +68,7 @@ export default function ClassPage() {
   const handleUpdateClass = async (cls: Class, isCurrent: boolean) => {
     try {
       const response = await axios.patch<ApiResponse<Class>>(
-        `http://localhost:3000/api/class/update/${cls.id}`,
+        `https://academico.peesadqroo.com/api/class/update/${cls.id}`,
         {
           isCurrent,
         },

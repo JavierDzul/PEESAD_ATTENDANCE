@@ -37,13 +37,13 @@ export default function CreateClassModal({ onDismiss }: CreateClassModalProps) {
   useEffect(() => {
     Promise.all([
       axios.get<ApiResponseAll<Package>>(
-        'http://localhost:3000/api/package/findAll?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/package/findAll?page=1&limit=0&isActive=true',
       ),
       axios.get<ApiResponseAll<Subject>>(
-        'http://localhost:3000/api/subjects/findAll?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/subjects/findAll?page=1&limit=0&isActive=true',
       ),
       axios.get<ApiResponseAll<Teacher>>(
-        'http://localhost:3000/api/teachers?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/teachers?page=1&limit=0&isActive=true',
       ),
     ])
       .then(([packages, subjects, teachers]) => {
@@ -57,7 +57,7 @@ export default function CreateClassModal({ onDismiss }: CreateClassModalProps) {
   const handleCreateClass = async () => {
     try {
       const response = await axios.post<ApiResponse<Class>>(
-        'http://localhost:3000/api/class/create',
+        'https://academico.peesadqroo.com/api/class/create',
         {
           package_id: values.package,
           subject_id: values.subject,

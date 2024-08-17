@@ -16,7 +16,7 @@ axios.interceptors.request.use(
 
 export const fetchPartialsData = async (idClass: number) => {
   try {
-    const response = await axios.get(`http://localhost:5100/api/partial/findAll`, {
+    const response = await axios.get(`https://academico.peesadqroo.com/api/partial/findAll`, {
       params: {
         classId: idClass,
         page: 1,
@@ -32,7 +32,7 @@ export const fetchPartialsData = async (idClass: number) => {
 
 export const createAttendance = async (classId: number, partialId: number, attendanceDate: string, state: number) => {
   try {
-    const response = await axios.post("http://localhost:5100/api/attendance/bulk-create", {
+    const response = await axios.post("https://academico.peesadqroo.com/api/attendance/bulk-create", {
       classId,
       partialId,
       day: new Date(attendanceDate),
@@ -46,7 +46,7 @@ export const createAttendance = async (classId: number, partialId: number, atten
 
 export const createPartial = async (classId: number, title: string) => {
   try {
-    const response = await axios.post("http://localhost:5100/api/partial/create", {
+    const response = await axios.post("https://academico.peesadqroo.com/api/partial/create", {
       title,
       classId,
     });

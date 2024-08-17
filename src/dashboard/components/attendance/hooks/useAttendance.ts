@@ -7,7 +7,7 @@ export const useAttendance = (idClass: number) => {
 
   const fetchPartials = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/partial/findAll`, {
+      const response = await axios.get(`https://academico.peesadqroo.com/api/partial/findAll`, {
         params: {
           classId: idClass,
           page: 1,

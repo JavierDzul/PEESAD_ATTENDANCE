@@ -37,7 +37,7 @@ export const JustificationPage = ({ cls }: HeaderClassProps) => {
     const initialFetch = async () => {
       try {
         if (classIdParam) {
-          const { data } = await axios.get(`http://localhost:3000/api/class/findStudents?page=1&limit=100&classId=${classIdParam}`);
+          const { data } = await axios.get(`https://academico.peesadqroo.com/api/class/findStudents?page=1&limit=100&classId=${classIdParam}`);
           const studentsWithFullName = data.data.map((student: any) => ({
             ...student,
             fullName: `${student.name} ${student.lastName} ${student.motherLastName}`,

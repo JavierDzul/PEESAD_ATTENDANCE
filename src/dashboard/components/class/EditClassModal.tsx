@@ -43,13 +43,13 @@ export default function EditClassModal({
   useEffect(() => {
     Promise.all([
       axios.get<ApiResponseAll<Package>>(
-        'http://localhost:3000/api/package/findAll?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/package/findAll?page=1&limit=0&isActive=true',
       ),
       axios.get<ApiResponseAll<Subject>>(
-        'http://localhost:3000/api/subjects/findAll?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/subjects/findAll?page=1&limit=0&isActive=true',
       ),
       axios.get<ApiResponseAll<Teacher>>(
-        'http://localhost:3000/api/teachers?page=1&limit=0&isActive=true',
+        'https://academico.peesadqroo.com/api/teachers?page=1&limit=0&isActive=true',
       ),
     ])
       .then(([packages, subjects, teachers]) => {
@@ -63,7 +63,7 @@ export default function EditClassModal({
   const handleUpdateClass = async () => {
     try {
       const response = await axios.patch<ApiResponse<Class>>(
-        `http://localhost:3000/api/class/update/${cls.id}`,
+        `https://academico.peesadqroo.com/api/class/update/${cls.id}`,
         {
           packageId: values.package,
           subjectId: values.subject,
