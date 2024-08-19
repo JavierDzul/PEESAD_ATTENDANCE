@@ -10,11 +10,11 @@ import { setSelectedClass } from "../../../store/Class/thunks";
 
 export const ListList = () => {
     const dispatch = useDispatch<AppDispatch>();
-   
+
     
     const {classes} = useSelector((state:RootState)=>  state.class);
     const urlImage = import.meta.env.VITE_API_URL_AUTH
-    const { user } = useSelector((state: RootState) => state.auth);
+    const {typeUser, user } = useSelector((state: RootState) => state.auth);
     const username = user.name + user.lastName + user.motherLastName
 
     useEffect(()=>{
@@ -82,7 +82,7 @@ export const ListList = () => {
                                         className="btn btn-secondary"
                                         onClick={()=>{dispatch(setSelectedClass(cls.id))}}
                                          to="/attendance">
-                                        <span className='fs-6'>Pasar lista</span>
+                                        <span className='fs-6'>{typeUser == "Tutor" ? "Pasar lista" : "Ver lista"  }</span>
                                     </NavLink>
                                 </div>
                             </div>
