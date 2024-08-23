@@ -2,49 +2,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { ClassQueryParams, getAllClass } from "../../../store/Class/thunks";
 import { useEffect, useState } from "react";
-import { getAllCareer } from "../../../store/carrer/thunks";
 import { getAllSubject } from "../../../store/subject/thunks";
 import { Subject } from "../../../interfaces/subject";
-import { CareerState } from "../../../store/carrer";
 
-export const            SearchClass = () => {
+export const SearchClass = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { careers }: CareerState = useSelector((state: RootState) => state.career);
-    const subjects: Subject[] = useSelector((state: RootState) => state.subject.data);
+    const subjects: Subject[] = useSelector((state: RootState) => state.subject.data || []);
 
-    const [semesters, setSemesters] = useState<number[] | undefined>(undefined);
-    const [career, setCareer] = useState<string | undefined>(undefined);
+    // const [semesters, setSemesters] = useState<number[] | undefined>(undefined); // Eliminado
+    // const [career, setCareer] = useState<string | undefined>(undefined); // Eliminado
     const [subject, setSubject] = useState<string | undefined>(undefined);
-    const [semester, setSemester] = useState<string | undefined>(undefined);
     const [params, setParams] = useState<ClassQueryParams>({ page: 1, limit: 10 });
 
     const handleOnChange = (event: React.ChangeEvent<HTMLSelectElement>, inputName: string) => {
         const value = event.target.value;
 
         switch (inputName) {
-            case 'career':
-                setCareer(value);
-                setSubject(undefined);
-                setSemesters(undefined);
-                if (value) {
-                    const selectedCareer = careers.find((item) => item.id === +value);
-                    const maxSemester = selectedCareer ? parseInt(selectedCareer.semester) : 0;
-                    setSemesters(Array.from({ length: maxSemester }, (_, i) => i + 1));
-                    dispatch(getAllSubject({ page: 1, limit: 1000, idCareer: value, semester, isActive: 'true' }));
-                } else {
-                    setSemester(undefined);
-                    dispatch(getAllSubject({ page: 1, limit: 1000, isActive: 'true' }));
-                }
-                break;
-            case 'semester':
-                setSemester(value);
-                setSubject(undefined);
-                if (value) {
-                    dispatch(getAllSubject({ page: 1, limit: 1000, idCareer: career, semester: value, isActive: 'true' }));
-                } else {
-                    dispatch(getAllSubject({ page: 1, limit: 1000, isActive: 'true' }));
-                }
-                break;
+            // case 'career': // Eliminado
+            //     setCareer(value);
+            //     setSubject(undefined);
+            //     setSemesters(undefined);
+            //     if (value) {
+            //         const selectedCareer = careers.find((item) => item.id === +value);
+            //         const maxSemester = selectedCareer ? parseInt(selectedCareer.semester) : 0;
+            //         setSemesters(Array.from({ length: maxSemester }, (_, i) => i + 1));
+            //         dispatch(getAllSubject({ page: 1, limit: 1000, idCareer: value, semester, isActive: 'true' }));
+            //     } else {
+            //         setSemester(undefined);
+            //         dispatch(getAllSubject({ page: 1, limit: 1000, isActive: 'true' }));
+            //     }
+            //     break;
+            // case 'semester': // Eliminado
+            //     setSemester(value);
+            //     setSubject(undefined);
+            //     if (value) {
+            //         dispatch(getAllSubject({ page: 1, limit: 1000, idCareer: career, semester: value, isActive: 'true' }));
+            //     } else {
+            //         dispatch(getAllSubject({ page: 1, limit: 1000, isActive: 'true' }));
+            //     }
+            //     break;
             case 'subject':
                 setSubject(value);
                 break;
@@ -54,16 +50,15 @@ export const            SearchClass = () => {
     };
 
     useEffect(() => {
-        setParams({ page: 1, limit: 10, idCareer: career, semester, subjectId: subject, isDeleted: false });
-    }, [career, semester, subject]);
+        setParams({ page: 1, limit: 10, subjectId: subject, isDeleted: false }); // Eliminados idCareer y semester
+    }, [subject]);
 
     useEffect(() => {
-        dispatch(getAllCareer(1, 100));
         dispatch(getAllSubject({ page: 1, limit: 1000, isActive: 'true' }));
     }, [dispatch]);
 
     useEffect(() => {
-        console.log(params);
+        console.log("Params:", params);
         dispatch(getAllClass(params));
     }, [params, dispatch]);
 
@@ -74,8 +69,8 @@ export const            SearchClass = () => {
                     <h4 className="mb-0">Buscar Clases</h4>
                 </div>
                 <div className="card-body">
-                    <div className="row mb-3">
-                        <div className="col-md-4">
+                    <div className="row mb-3 align-items-center">
+                        {/* <div className="col-md-4"> // Comentado
                             <div className="form-group">
                                 <label className="form-label">Carrera</label>
                                 <select
@@ -91,9 +86,9 @@ export const            SearchClass = () => {
                                     ))}
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="col-md-4">
+                        {/* <div className="col-md-4"> // Comentado
                             <div className="form-group">
                                 <label className="form-label">Semestre</label>
                                 <select
@@ -110,7 +105,7 @@ export const            SearchClass = () => {
                                     ))}
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="col-md-4">
                             <div className="form-group">
@@ -127,6 +122,11 @@ export const            SearchClass = () => {
                                         </option>
                                     ))}
                                 </select>
+                            </div>
+                        </div>
+                        <div className="col-md-8">
+                            <div className="alert alert-info mb-0">
+                                <strong>Nota:</strong> Las clases y materias mostradas están seleccionadas en base a la carrera que tiene asignada como tutor. Solo se muestran aquellas materias que están relacionadas con la carrera. Si no aparecen todas las clases asignadas, por favor <strong>contacte al administrador.</strong>
                             </div>
                         </div>
                     </div>
