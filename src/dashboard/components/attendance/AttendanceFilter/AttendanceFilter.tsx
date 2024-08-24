@@ -80,7 +80,7 @@ export const AttendanceFilter: React.FC = () => {
       const result = await showConfirmationAlert("¿Estás seguro?", "Crearás una nueva asistencia para la fecha actual.");
       if (result.isConfirmed) {
         try {
-          const res=  await createAttendance(idClass, selectedPartial.id, new Date().toISOString().split('T')[0], state);
+          const res=  await createAttendance(idClass, selectedPartial.id, state);
           dispatch(
             getList({
               id: idClass,

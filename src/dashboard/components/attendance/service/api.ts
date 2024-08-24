@@ -18,12 +18,11 @@ export const fetchPartialsData = async (idClass: number) => {
 };
 
 
-export const createAttendance = async (classId: number, partialId: number, attendanceDate: string, state: number) => {
+export const createAttendance = async (classId: number, partialId: number, state: number) => {
   try {
     const response = await axiosWithToken(`/attendance/bulk-create`, {
       classId,
       partialId,
-      day: new Date(attendanceDate),
       state,
     }, 'POST');
     return response;
