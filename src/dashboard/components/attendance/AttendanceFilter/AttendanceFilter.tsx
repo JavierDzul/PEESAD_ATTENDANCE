@@ -8,7 +8,6 @@ import PartialNav from "./PartialNav";
 import CreatePartialModal from "./CreatePartialModal";
 import { fetchPartialsData, createPartial, createAttendance } from "../service/api";
 import { showSuccessAlert, showErrorAlert, showConfirmationAlert } from "../utils/Swal";
-import { format, toDate } from 'date-fns-tz';
 
 export const AttendanceFilter: React.FC = () => {
   const { typeUser } = useSelector((state: RootState) => state.auth);
@@ -77,20 +76,11 @@ export const AttendanceFilter: React.FC = () => {
   };
 
   const handleCreateAttendance = async () => {
-    if (selectedPartial) {
+    if ( selectedPartial) {
       const result = await showConfirmationAlert("¿Estás seguro?", "Crearás una nueva asistencia para la fecha actual.");
       if (result.isConfirmed) {
         try {
-          const timeZone = 'America/Cancun';
-
-          // Obtener la fecha actual en la zona horaria local
-          const localDate = toDate(new Date(), { timeZone });
-          console.log("fechas",localDate);
-          // Formatear la fecha para obtener solo la parte de la fecha sin la hora
-          const formattedDate = format(localDate, 'yyyy-MM-dd');
-          console.log("fechas",formattedDate);
-
-          const res = await createAttendance(idClass, selectedPartial.id, formattedDate, state);
+          const res=  await createAttendance(idClass, selectedPartial.id, new Date().toISOString().split('T')[0], state);
           dispatch(
             getList({
               id: idClass,
@@ -99,10 +89,10 @@ export const AttendanceFilter: React.FC = () => {
               endDate,
             })
           );
-          if (res.status == true)
-            showSuccessAlert('Éxito', 'Asistencia creada correctamente');
-          else
-            showErrorAlert('Error', res.message);
+          if(res.status==true)
+          showSuccessAlert('Éxito', 'Asistencia creada correctamente');
+        else
+        showErrorAlert('Error', res.message);
 
         } catch (error) {
           console.error("Error creating attendance", error);
@@ -137,8 +127,8 @@ export const AttendanceFilter: React.FC = () => {
           {showFilter ? 'Ocultar Filtro' : 'Mostrar Filtro'}
         </Button>
         {typeUser === 'Tutor' && (<Button variant="success" className="ms-2 mr-2" onClick={handleCreateAttendance}>
-          Crear Asistencia
-        </Button>)}
+                Crear Asistencia
+              </Button>)}
       </div>
 
       <PartialNav
@@ -163,7 +153,7 @@ export const AttendanceFilter: React.FC = () => {
           </div>
         </Collapse>
 
-
+        
       </div>
 
       <CreatePartialModal
