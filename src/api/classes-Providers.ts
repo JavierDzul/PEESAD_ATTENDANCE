@@ -1,7 +1,7 @@
-import { axiosWithToken } from "../helpers/axios";
+import { axiosWithoutToken, axiosWithToken } from "../helpers/axios";
 import { Class, CreateClass } from "../interfaces/class";
 import { ClassQueryParams } from "../store/Class/thunks";
-
+/*
 export const apiGetAllClass = async (queryParams:ClassQueryParams) =>{
     try {
         const searchParams = new URLSearchParams();
@@ -11,7 +11,7 @@ export const apiGetAllClass = async (queryParams:ClassQueryParams) =>{
         }
       
         if (queryParams.limit !== undefined) {
-          searchParams.append('limit', queryParams.limit.toString());
+          searchParams.append('pageSize', queryParams.limit.toString());
         }
       
         if (queryParams.teacherId !== undefined) {
@@ -43,7 +43,9 @@ export const apiGetAllClass = async (queryParams:ClassQueryParams) =>{
           searchParams.append('relationCheck', queryParams.relationCheck.toString());
         }
 
-        return await axiosWithToken(`/class/findAll?${searchParams.toString()}`);
+        const response = await axiosWithoutToken(`/class/findAll?${searchParams.toString()}`);
+        console.log(response);
+        return response; 
     } catch (error:any) {
         console.log(error);
         return{
@@ -51,31 +53,72 @@ export const apiGetAllClass = async (queryParams:ClassQueryParams) =>{
             message:error.message,
         };
     }
-}
+}*/
 
-export const apiCreateClass=  async(formData: CreateClass)=>{
-  try{
+export const apiGetAllClass = async (queryParams: ClassQueryParams) => {
+  try {
+    const searchParams = new URLSearchParams();
+    const TypeUser = localStorage.getItem("TypeUser");
+    const teacherId = localStorage.getItem("teacherId");
+
+    if (TypeUser === "Profesor") {
+      if (teacherId) {
+        searchParams.append("teacherId", teacherId);
+      } else {
+        throw new Error("teacherId no encontrado en localStorage");
+      }
+    }
+    else if (TypeUser === "Tutor") {
+      if (teacherId) {
+        searchParams.append("tutorId", teacherId);
+      } else {
+        throw new Error("teacherId no encontrado en localStorage");
+      }
+    }
+
+    if (queryParams.page !== undefined) {
+      searchParams.append("page", queryParams.page.toString());
+    }
+
+    if (queryParams.limit !== undefined) {
+      searchParams.append("pageSize", queryParams.limit.toString());
+    }
+
+    const response = await axiosWithoutToken(`/class/findAll?${searchParams.toString()}`);
+    console.log("API response:", response.data);
+    return response;
+  } catch (error: any) {
+    console.log("Error en apiGetAllClass:", error);
+    return {
+      status: false,
+      message: error.message,
+    };
+  }
+};
+
+export const apiCreateClass = async (formData: CreateClass) => {
+  try {
     return await axiosWithToken(`/class/create`, formData, 'POST');
-  }catch(error:any){
+  } catch (error: any) {
     console.log(error);
-        console.log(error);
-        return{
-          status: false,
-          message:error.message,
-      };
+    console.log(error);
+    return {
+      status: false,
+      message: error.message,
+    };
   }
 }
 
 
-export const apiUpdateClass = async (id:number, formData : Class) => {
+export const apiUpdateClass = async (id: number, formData: Class) => {
   try {
-      return await axiosWithToken(`/class/update/${id}`, formData, 'PATCH');
-  } catch (error:any) {
-      console.log(error);
-      return {
-          status: false,
-          message: error.message
-      }
+    return await axiosWithToken(`/class/update/${id}`, formData, 'PATCH');
+  } catch (error: any) {
+    console.log(error);
+    return {
+      status: false,
+      message: error.message
+    }
   }
 }
 
