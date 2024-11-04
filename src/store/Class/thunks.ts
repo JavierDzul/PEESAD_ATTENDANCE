@@ -57,18 +57,20 @@ export const setSelectedClass = (classId: number) => {
     }
   };
 };
-
+/*
 export const getAllClass = (params: ClassQueryParams) => {
   return async (dispatch: AppDispatch) => {
+    console.log("Calling getAllClass with params:", params); // Verificación
+
     dispatch(setIsLoading(true));
     try {
       const resp = await apiGetAllClass(params);
       dispatch(
         setClassData({
-          data: resp.data,
-          total: resp.total,
-          page: resp.page,
-          limit: resp.limit,
+          data: resp.data?.data || [],
+          total: resp.data?.total || 0,
+          page: resp.data?.page || 1,
+          limit: resp.data?.limit || 10,
         }),
       );
       // console.log(params);
@@ -78,7 +80,29 @@ export const getAllClass = (params: ClassQueryParams) => {
     }
   };
 };
-
+*/
+export const getAllClass = (params: ClassQueryParams) => {
+  return async (dispatch: AppDispatch) => {
+      dispatch(setIsLoading(true));
+      try {
+          const resp = await apiGetAllClass(params);
+          if (resp.status !== false) {
+              dispatch(setClassData({
+                  data: resp.data || [],
+                  total: resp.total || 0,
+                  page: resp.page || 1,
+                  limit: resp.limit || 10,
+              }));
+          } else {
+              showErrorMessage(resp.message);
+          }
+      } catch (error: any) {
+          showErrorMessage(error.message);
+      } finally {
+          dispatch(setIsLoading(false));
+      }
+  };
+};
 export const createClass = (formData: CreateClass) => {
   return async (dispatch: AppDispatch) => {
     try {
