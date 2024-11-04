@@ -1,11 +1,9 @@
 import { useEffect } from "react";
 import { ListList } from "../../components/attendance/ListList"
 import { SearchClass } from "../../components/class/searchClass"
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store/store";
-import { getAllUnit } from "../../../store/unit/thunks";
-import { getAllClass, setSelectedClass } from "../../../store/Class/thunks";
-import { getAllSubject } from "../../../store/subject/thunks";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store/store";
+import { getAllClass } from "../../../store/Class/thunks";
 
 
 export const ListPage = () => {
