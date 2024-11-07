@@ -13,7 +13,29 @@ export interface Class {
   subject: Subject;
   package: Package;
   partial: Partial[];
+  period: Period;
+  subperiod:subperiod;
 }
+
+export interface subperiod {
+  endDate: string;
+  id: number;
+  isCurrent: boolean;
+  key: string;
+  name: string;
+  startDate:string;
+
+}
+export interface Period {
+  endDate: string;
+  id: number;
+  isCurrent: boolean;
+  key: string;
+  name: string;
+  startDate:string;
+
+}
+
 
 export interface CreateClass {
   teacher: Teacher;
