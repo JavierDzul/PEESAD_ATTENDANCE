@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from "./../../assets/logoCompleto.png"
+import logo from "./../../assets/icons/logoAtten.png"
 import logoTecnm from "./../../assets/tecnm.svg"
 import logoGob from "./../../assets/logo.svg"
 
@@ -21,8 +21,9 @@ export const AuthLayout: React.FC<Props> = ({ children }) => {
                 <img src={logoGob} alt="escudo-y-logo" width={320} className="my-3" />
               </div>
               <div className="d-flex flex-column align-items-center justify-content-center w-100 w-md-50 p-1">
-                <div className="d-flex justify-content-center">
-                  <img src={logo} alt="escudo-y-logo" width={180} />
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                  <img src={logo} alt="escudo-y-logo" width={100} />
+                  <h3>PEESaD ATTENDANCE</h3>
                 </div>
                 <div className="w-100">
                   {children}
