@@ -18,6 +18,7 @@ export const useRoleChangeListener = () => {
 
       socket.on('connect', () => {
         console.log('Connected to WebSocket server');
+        
       });
 
       socket.on('roleChange', async (data) => {

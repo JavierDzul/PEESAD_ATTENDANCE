@@ -69,7 +69,7 @@ export const ListList = () => {
                                 className={`accordion-button ${!isCurrentSubperiod ? "disabled" : ""}`}
                                 type="button"
                                 data-bs-toggle="collapse"
-                                data-bs-target={`#subperiod-${subperiodName}`}
+                               // data-bs-target={`#subperiod-${subperiodName}`}
                                 aria-expanded="true"
                                 aria-controls={`subperiod-${subperiodName}`}
                                 disabled={!isCurrentSubperiod} // Deshabilitar expansión si el subperiodo no está activo

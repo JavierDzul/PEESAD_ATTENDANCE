@@ -5,7 +5,7 @@ import { ApiResponse } from '../../interfaces/response';
 import type { ApiResponseAll } from '../../interfaces/response-all';
 import { Student } from '../../interfaces/student';
 import { Teacher } from '../../interfaces/teacher';
-import { api, PaginationQueryType } from '../peesadApi';
+import {  PaginationQueryType, peesadApi } from '../peesadApi';
 
 export type AttendanceQueryType = {
   student: Student;
@@ -13,20 +13,32 @@ export type AttendanceQueryType = {
   attendances: Attendance[];
 };
 
-const classApi = api.injectEndpoints({
+const classApi = peesadApi.injectEndpoints({
   endpoints: (build) => ({
     getClassesByTeacherId: build.query<
       ApiResponseAll<Class>,
       PaginationQueryType & { teacherId: number }
     >({
-      query: ({ page = 1, limit = 1, isActive, teacherId }) => ({
-        url: `class/findAll?page=${page}&limit=${limit}&teacherId=${teacherId}${
+      query: ({ page = 1, pageSize = 1, isActive, teacherId }) => ({
+        url: `class/findAll?page=${page}&pageSize=${pageSize}&teacherId=${teacherId}${
           isActive ? '&isCurrent=' + isActive : ''
         }`,
         method: 'GET',
       }),
       providesTags: ['Classes'],
     }),
+    getClassesByTeacherIdStudents: build.query<
+    ApiResponseAll<Class>,
+    PaginationQueryType & { teacherId: number }
+  >({
+    query: ({ page = 1, pageSize = 1, isActive, teacherId }) => ({
+      url: `class/findAllTeacher?page=${page}&pageSize=${pageSize}&teacherId=${teacherId}${
+        isActive ? '&isCurrent=' + isActive : ''
+      }`,
+      method: 'GET',
+    }),
+    providesTags: ['Classes'],
+  }),
     getTeacherById: build.query<ApiResponse<Teacher>, number>({
       query: (id) => ({
         url: `teachers/${id}`,
@@ -61,6 +73,7 @@ const classApi = api.injectEndpoints({
 });
 
 export const {
+  useGetClassesByTeacherIdStudentsQuery,
   useGetClassesByTeacherIdQuery,
   useGetAttendancesByRangeQuery,
   useGetTeacherByIdQuery,
