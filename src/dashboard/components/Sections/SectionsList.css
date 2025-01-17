@@ -1,0 +1,59 @@
+/* src/components/Sections/SectionsList.css */
+.ql-editor {
+    padding: 0 !important;
+  }
+  
+  .ql-editor img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .ql-editor pre {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .ql-editor blockquote {
+    border-left: 4px solid #ccc;
+    margin: 16px 0;
+    padding-left: 16px;
+    color: #666;
+  }
+  
+  .ql-editor table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  
+  .ql-editor td,
+  .ql-editor th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .ql-editor th {
+    background-color: #f8f9fa;
+  }
+  
+  .ql-editor ul,
+  .ql-editor ol {
+    padding-left: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .ql-editor h1,
+  .ql-editor h2,
+  .ql-editor h3,
+  .ql-editor h4,
+  .ql-editor h5,
+  .ql-editor h6 {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  
+  .ql-editor p {
+    margin-bottom: 16px;
+  }

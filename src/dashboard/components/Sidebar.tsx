@@ -104,6 +104,28 @@ export const Sidebar = () => {
                 </li>
               </>
             )}
+                        {typeUser === 'Profesor' && (
+              <>
+                <li className='nav-item'>
+                  <NavLink
+                    style={({ isActive }) =>
+                      isActive
+                        ? activeStyle
+                        : typeUser === null
+                        ? disabledStyle
+                        : undefined
+                    }
+                    className={`nav-link d-flex flex-column align-items-center ${
+                      typeUser === null ? 'disabled-link' : ''
+                    }`}
+                    to='/classes'
+                  >
+                    <img src={verLista} width={35} alt='ver lista' />
+                    <span className='fs-6'>Material Didactico</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

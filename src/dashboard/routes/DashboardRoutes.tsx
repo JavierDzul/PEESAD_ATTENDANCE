@@ -10,6 +10,9 @@ import ClassesOfTeacherPage from '../pages/attendanceList/ClassesOfTeacherPage';
 import ClassPage from '../pages/class/ClassPage';
 import { JustificationPage } from '../pages/justification/JustificationPage';
 import { ListPage } from '../pages/list/ListPage';
+import ClassesPage from '../pages/Classes/ClassesPage';
+import TeachingMaterial from '../pages/TeachingMaterial/TeachingMaterialPage';
+import ActivityPage from '../pages/Activity/ActivityPage';
 
 export const DashboardRoutes = () => {
   const selectedClass = useSelector(
@@ -33,11 +36,16 @@ export const DashboardRoutes = () => {
         <Route path='attendance' element={
           selectedClass ? <AttendancePage cls={selectedClass as Class} /> : <Navigate to="/list" replace />
         } />
+        <Route path="/classes" element={<ClassesPage />} />
+
         {/* <Route path='viewAttendance' element={
           selectedClass ? <ViewAttendancePage cls={selectedClass as Class} /> : <Navigate to="/listClass" replace />
         } /> */}
         {/* TODO: Descomentar en proxima versión y redireccionar a /inicio  */}
         <Route path='/*' element={<Navigate to='/home' />} />
+        <Route path="/teaching-material/:subjectId" element={<TeachingMaterial />} />7
+        <Route path="/subjects/:subjectId/activities/:id" element={<ActivityPage />} />
+
       </Routes>
     </DashboardLayout>
   );

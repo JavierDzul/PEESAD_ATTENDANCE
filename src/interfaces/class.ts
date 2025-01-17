@@ -1,5 +1,6 @@
 import { Package } from './package';
 import { Partial } from './partial';
+import { Student } from './student';
 import { Subject } from './subject';
 import { Teacher } from './teacher';
 import { Tutor } from './tutor';
@@ -8,6 +9,7 @@ export interface Class {
   id: number;
   isCurrent: boolean;
   isDeleted: boolean;
+  semester:string;
   teacher: Teacher;
   tutor?: Tutor;
   subject: Subject;
@@ -15,6 +17,7 @@ export interface Class {
   partial: Partial[];
   period: Period;
   subperiod:subperiod;
+  students?: Student[]
 }
 
 export interface subperiod {

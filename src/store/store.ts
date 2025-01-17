@@ -7,7 +7,8 @@ import { subjectSlice } from './subject';
 import { UnitSlice } from './unit';
 import { justificationSlice } from './justification/justificationSlice';
 import { authApi } from '../services/api/authApi';
-import { api } from '../services/peesadApi';
+import classReducer from './slices/classSlice';
+import { peesadApi } from '../services/peesadApi';
 
 export const store :any= configureStore({
   reducer: {
@@ -18,12 +19,14 @@ export const store :any= configureStore({
     unit: UnitSlice.reducer,
     list: listSlice.reducer,
     justification:justificationSlice.reducer,
+        classScore: classReducer,
+
     [authApi.reducerPath]: authApi.reducer,
-    [api.reducerPath]: api.reducer,
+    [peesadApi.reducerPath]: peesadApi.reducer,
     
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, api.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, peesadApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

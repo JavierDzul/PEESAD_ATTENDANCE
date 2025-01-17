@@ -1,13 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-
-export type PaginationQueryType = {
+export type PaginationQueryParamsType = {
   page?: number;
   limit?: number;
   isActive?: boolean;
 };
+export type PaginationQueryType = {
+  page?: number;
+  limit?: number;
+  pageSize?:number;
+  isActive?: boolean;
+};
 
-export const api = createApi({
+export const peesadApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
@@ -25,6 +30,9 @@ export const api = createApi({
     'Attendance', 
     'Partial',
     'User',
+    'Activity', 
+    'CourseSection'  ,
+    'ScheduledActivity'
   ],
   endpoints: () => ({}),
 });

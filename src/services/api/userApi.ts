@@ -1,10 +1,10 @@
 import { User } from "../../interfaces/auth-response";
 import { ApiResponse } from "../../interfaces/response";
-import { api } from "../peesadApi";
+import { peesadApi } from "../peesadApi";
 
 
 
-export const userApi = api.enhanceEndpoints({addTagTypes:['User']}).injectEndpoints({
+export const userApi = peesadApi.enhanceEndpoints({addTagTypes:['User']}).injectEndpoints({
 
     endpoints: (builder) => ({
 
