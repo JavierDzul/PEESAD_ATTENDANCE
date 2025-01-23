@@ -32,7 +32,10 @@ export const peesadApi = createApi({
     'User',
     'Activity', 
     'CourseSection'  ,
-    'ScheduledActivity'
+    'ScheduledActivity',
+    'SectionWeight',
+    'ActivityWeight',
+    'Weight'
   ],
   endpoints: () => ({}),
 });

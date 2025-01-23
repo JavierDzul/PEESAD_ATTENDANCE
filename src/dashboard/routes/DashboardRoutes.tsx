@@ -13,6 +13,7 @@ import { ListPage } from '../pages/list/ListPage';
 import ClassesPage from '../pages/Classes/ClassesPage';
 import TeachingMaterial from '../pages/TeachingMaterial/TeachingMaterialPage';
 import ActivityPage from '../pages/Activity/ActivityPage';
+import CreateScheduleActivityPage from '../pages/ScheduleActivity/CreateScheduleActivityPage';
 
 export const DashboardRoutes = () => {
   const selectedClass = useSelector(
@@ -45,6 +46,7 @@ export const DashboardRoutes = () => {
         <Route path='/*' element={<Navigate to='/home' />} />
         <Route path="/teaching-material/:subjectId" element={<TeachingMaterial />} />7
         <Route path="/subjects/:subjectId/activities/:id" element={<ActivityPage />} />
+        <Route path="/subjects/:subjectId/activities/:activityId/schedule" element={<CreateScheduleActivityPage />} />
 
       </Routes>
     </DashboardLayout>

@@ -8,10 +8,12 @@ import TabList from '@mui/lab/TabList';
 import { Subject } from '../../../interfaces/subject';
 import SectionsTab from '../../components/Sections/SectionsTab';
 import ActiviesTab from '../../components/Activities/ActiviesTab';
+import ScheduledActivitiesTab from '../../components/ScheduledActivities/ScheduledActivitiesTab';
+import WeightsTab from '../../components/Weight/WeightsTab';
 
 const TeachingMaterial = () => {
   const location = useLocation();
-  
+
   const subject = location.state as Subject;
   const [value, setValue] = React.useState('1');
 
@@ -32,6 +34,8 @@ const TeachingMaterial = () => {
           <TabList onChange={handleChange} aria-label="teaching material tabs">
             <Tab label="Temario" value="1" />
             <Tab label="Actividades" value="2" />
+            <Tab label="Actividades Programadas" value="3" />
+            <Tab label="Ponderaciones" value="4" />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -42,6 +46,12 @@ const TeachingMaterial = () => {
 
           <ActiviesTab subject={subject} />
 
+        </TabPanel>
+        <TabPanel value="3">
+          <ScheduledActivitiesTab subject={subject} />
+        </TabPanel>
+        <TabPanel value="4">
+          <WeightsTab subject={subject} />
         </TabPanel>
       </TabContext>
     </Box>
