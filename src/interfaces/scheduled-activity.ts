@@ -1,8 +1,12 @@
+import { Activity } from "./activity";
+import { Class } from "./class";
+
 // src/interfaces/scheduled-activity.ts
 export interface ScheduledActivity {
     id: number;
-    classId: number;
-    activityId: number;
+
+    activity : Activity
+    class: Class
     startDate: string;
     endDate: string;
   }

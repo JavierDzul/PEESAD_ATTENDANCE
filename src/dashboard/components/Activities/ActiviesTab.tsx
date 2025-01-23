@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Typography, 
@@ -17,23 +17,40 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Subject } from '../../../interfaces/subject';
 import ActivityList from './ActivityList';
 import { useGetActivitiesBySubjectQuery } from '../../../services/api/courseSection';
+import { useGetScheduledActivitiesQuery } from '../../../services/api/scheduledActivityApi';
 
 interface ActivitiesTabProps {
   subject: Subject; 
 }
 
 const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
-  const navigate = useNavigate();
-  const { data, isLoading, error } = useGetActivitiesBySubjectQuery({
+  const location = useLocation();
+  const {classId} = location.state;
+
+  const { 
+    data: activitiesData, 
+    isLoading: isLoadingActivities, 
+    error: activitiesError 
+  } = useGetActivitiesBySubjectQuery({
     subjectId: subject.id!
   });
 
+  // Obtener scheduled activities
+  const {
+    data: scheduledActivitiesData,
+    isLoading: isLoadingScheduled
+  } = useGetScheduledActivitiesQuery({ 
+    classId: classId, 
+    page: 1,
+    limit: 100 
+  });
+console.log(scheduledActivitiesData)
   const groupedData = React.useMemo(() => {
-    if (!data?.data) return [];
+    if (!activitiesData?.data) return [];
     
     const sectionsMap = new Map();
     
-    data.data.forEach(activity => {
+    activitiesData.data.forEach(activity => {
       if (!sectionsMap.has(activity.section.id)) {
         sectionsMap.set(activity.section.id, {
           sectionId: activity.section.id,
@@ -48,9 +65,9 @@ const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
     });
     
     return Array.from(sectionsMap.values());
-  }, [data]);
+  }, [activitiesData]);
 
-  if (isLoading) {
+  if (isLoadingActivities || isLoadingScheduled) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
@@ -58,7 +75,7 @@ const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
     );
   }
 
-  if (error) {
+  if (activitiesError) {
     return (
       <Alert severity="error">
         Error al cargar las actividades. Por favor, intente nuevamente.
@@ -112,12 +129,12 @@ const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
                 right: '48px',
                 zIndex: 1
               }}>
-
               </Box>
             </Box>
             <AccordionDetails>
               <ActivityList 
                 activities={activities}
+                scheduledActivities={scheduledActivitiesData?.items || []}
                 subjectId={subject.id!}
                 sectionId={sectionId}
               />

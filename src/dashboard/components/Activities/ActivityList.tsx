@@ -1,157 +1,147 @@
-// src/components/ActivityList.tsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Typography, 
   Paper,
   Divider,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Alert
+  Tooltip,
+  Chip,
+  Button
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers'
-import { useAddScheduledActivityMutation } from '../../../services/api/scheduledActivityApi';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { Activity } from '../../../interfaces/activity';
+import { ScheduledActivity } from '../../../interfaces/scheduled-activity';
 
 interface ActivityListProps {
-  activities: any[];
+  activities: Activity[];
+  scheduledActivities: ScheduledActivity[];
   subjectId: number;
   sectionId: number;
 }
 
-const ActivityList: React.FC<ActivityListProps> = ({ activities, subjectId, sectionId }) => {
+const ActivityList: React.FC<ActivityListProps> = ({ 
+  activities, 
+  scheduledActivities, 
+  subjectId, 
+  sectionId 
+}) => {
+  const location = useLocation();
+  const {classId} = location.state;
   const navigate = useNavigate();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [currentActivityId, setCurrentActivityId] = useState<number | null>(null);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  console.log(scheduledActivities)
+  const isActivityScheduled = (activityId: number) => {
+    return scheduledActivities.some(sa => sa.activity.id === activityId);
+  };  
 
-  const [addScheduledActivity, { isLoading }] = useAddScheduledActivityMutation();
-
-  const handleOpenDialog = (activityId: number) => {
-    setCurrentActivityId(activityId);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setCurrentActivityId(null);
-    setStartDate(null);
-    setEndDate(null);
-    setError(null);
-  };
-
-  const handleSave = async () => {
-    if (!startDate || !endDate || !currentActivityId) {
-      setError('Todos los campos son obligatorios');
-      return;
+  const getScheduleInfo = (activityId: number) => {
+    const schedule = scheduledActivities.find(sa => sa.activity.id=== activityId);
+    if (schedule) {
+      return {
+        startDate: new Date(schedule.startDate).toLocaleDateString(),
+        endDate: new Date(schedule.endDate).toLocaleDateString()
+      };
     }
-
-    try {
-      await addScheduledActivity({
-        classId: subjectId, // Assuming classId is same as subjectId, adjust as necessary
-        activityId: currentActivityId,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
-      }).unwrap();
-      handleCloseDialog();
-    } catch (err) {
-      setError('Error al programar la actividad. Inténtalo de nuevo.');
-    }
+    return null;
   };
-
-  if (activities.length === 0) {
-    return (
-      <Box sx={{ textAlign: 'center', py: 2 }}>
-        <Typography color="text.secondary" gutterBottom>
-          No hay actividades en esta sección.
-        </Typography>
-      </Box>
-    );
-  }
-
+  const truncateHtmlContent = (htmlContent:string, maxLength = 150) => {
+    const div = document.createElement('div');
+    div.innerHTML = htmlContent;
+    let text = div.textContent || div.innerText || '';
+  if (text.length > maxLength) {
+        text = text.substring(0, maxLength) + '...';
+    }
+    
+    return text;
+};
   return (
-    <>
-      {activities.map((activity, index) => (
-        <Paper 
-          key={activity.id} 
-          elevation={1} 
-          sx={{ 
-            p: 2, 
-            mb: index !== activities.length - 1 ? 2 : 0,
-            '&:hover': {
-              backgroundColor: 'action.hover',
-              cursor: 'pointer'
-            }
-          }}
-        >
-          <Typography variant="subtitle1" fontWeight="bold" onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}`)}>
-            {activity.title}
-          </Typography>
-          <Typography 
-            variant="body2" 
-            color="text.secondary"
-            sx={{ 
-              mt: 1,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}
-            dangerouslySetInnerHTML={{ __html: activity.content }}
-          />
-          <Divider sx={{ my: 1 }} />
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 2
-          }}>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                Creado: {new Date(activity.createdAt).toLocaleDateString()}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Última actualización: {new Date(activity.updatedAt).toLocaleDateString()}
-              </Typography>
-            </Box>
-            <Button variant="contained" size="small" onClick={() => handleOpenDialog(activity.id)}>
-              Programar actividad
-            </Button>
-          </Box>
-        </Paper>
-      ))}
+    <>  
+      {activities.map((activity, index) => {
+        const scheduled = isActivityScheduled(activity.id);
+        const scheduleInfo = getScheduleInfo(activity.id);
+        return (
+          <Paper 
+            key={activity.id} 
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Programar Actividad</DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {error && <Alert severity="error">{error}</Alert>}
-            <DatePicker
-              label="Fecha de Inicio"
-              value={startDate}
-              onChange={(date) => setStartDate(date)}
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-            <DatePicker
-              label="Fecha de Fin"
-              value={endDate}
-              onChange={(date) => setEndDate(date)}
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} disabled={isLoading}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={isLoading}>Guardar</Button>
-        </DialogActions>
-      </Dialog>
+            elevation={1} 
+            sx={{ 
+              p: 2, 
+              mb: index !== activities.length - 1 ? 2 : 0,
+              opacity: scheduled ? 0.8 : 1,
+              '&:hover': {
+                backgroundColor: 'action.hover',
+                opacity: 1
+              }
+            }}
+          >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography 
+                  variant="subtitle1" 
+                  fontWeight="bold" 
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}`)}
+                  
+                >
+                  {activity.title}
+                </Typography>
+                <Typography 
+    variant="body2" 
+    color="text.secondary"
+    sx={{ mt: 1 }}
+>
+    {truncateHtmlContent(activity.content)}
+</Typography>
+              </Box>
+              <Box sx={{ ml: 2 }}>
+                
+                {scheduled ? (
+                  <Tooltip title={`Programada: ${scheduleInfo?.startDate} - ${scheduleInfo?.endDate}`}>
+                    <Chip
+                      icon={<EventNoteIcon />}
+                      label="Programada"
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  </Tooltip>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<CalendarTodayIcon />}
+                    onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}/schedule`,{
+                      state: {
+                        classId
+                    }
+                    })}
+                  >
+                    Programar
+                  </Button>
+                )}
+              </Box>
+            </Box>
+            <Divider sx={{ my: 1 }} />
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 2
+            }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Creado: {new Date(activity.createdAt).toLocaleDateString()}
+                </Typography>
+                {' • '}
+                <Typography variant="caption" color="text.secondary">
+                  Última actualización: {new Date(activity.updatedAt).toLocaleDateString()}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        );
+      })}
     </>
   );
 };

@@ -43,7 +43,6 @@ const ClassesPage: React.FC = () => {
     pageSize: ITEMS_PER_PAGE,
     isActive: true
   });
-console.log(error);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };

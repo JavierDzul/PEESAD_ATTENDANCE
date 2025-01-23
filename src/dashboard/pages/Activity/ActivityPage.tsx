@@ -26,7 +26,23 @@ const ActivityPage: React.FC = () => {
   const navigate = useNavigate();
   const { data: activityData, isLoading, error } = useGetActivityQuery(parseInt(id!));
 
+  // Estado local para el formulario de edición
+  const [formData, setFormData] = useState({
+    title: '',
+    content: ''
+  });
+
   // Inicializar el formulario cuando se cargan los datos
+  React.useEffect(() => {
+    if (activityData?.data) {
+      setFormData({
+        title: activityData.data.title,
+        content: activityData.data.content
+      });
+    }
+  }, [activityData]);
+
+ 
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -57,11 +73,17 @@ const ActivityPage: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
         </Tooltip>
-  </Box>
+        <Typography variant="h4" component="h1" sx={{ flexGrow: 1 }}>
+          { 'Detalles de la Actividad'}
+        </Typography>
+        
+      </Box>
 
       {/* Content */}
       <Paper sx={{ p: 3 }}>
-           <Box>
+        { 
+          // Vista de detalles
+          <Box>
             <Typography variant="h5" gutterBottom>
               {activityData?.data.title}
             </Typography>
@@ -84,7 +106,7 @@ const ActivityPage: React.FC = () => {
               </Typography>
             </Box>
           </Box>
-        
+        }
       </Paper>
     </Box>
   );

@@ -11,6 +11,7 @@ export interface ApiResponse<T> {
 export interface ApiResponseAll<T> {
   status: boolean;
   data: T[];
+  items: T[];
   page: number;
   limit: number;
   total: number;
@@ -46,6 +47,17 @@ const scheduledActivityApi = peesadApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      // Manejar el error de duplicado
+      transformErrorResponse: (response: { status: number; data: any }) => {
+        if (response.status === 400 && response.data?.message?.includes('already been scheduled')) {
+          return {
+            status: false,
+            message: 'Esta actividad ya ha sido programada para esta clase',
+            data: null
+          };
+        }
+        return response.data;
+      },
       invalidatesTags: [{ type: 'ScheduledActivity', id: 'LIST' }],
     }),
 
@@ -55,7 +67,21 @@ const scheduledActivityApi = peesadApi.injectEndpoints({
         method: 'PATCH',
         body: { ...body, id: undefined },
       }),
-      invalidatesTags: (result) => [{ type: 'ScheduledActivity', id: result?.data?.id }, { type: 'ScheduledActivity', id: 'LIST' }],
+      // Manejar el error de duplicado
+      transformErrorResponse: (response: { status: number; data: any }) => {
+        if (response.status === 400 && response.data?.message?.includes('already been scheduled')) {
+          return {
+            status: false,
+            message: 'Esta actividad ya ha sido programada para esta clase',
+            data: null
+          };
+        }
+        return response.data;
+      },
+      invalidatesTags: (result) => [
+        { type: 'ScheduledActivity', id: result?.data?.id },
+        { type: 'ScheduledActivity', id: 'LIST' }
+      ],
     }),
 
     deleteScheduledActivity: builder.mutation<ApiResponse<null>, { id: number }>({
