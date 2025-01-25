@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
   Typography, 
@@ -38,6 +39,8 @@ export const getStatusChip = (startDate: string, endDate: string) => {
 };
 
 const ScheduledActivitiesList: React.FC<ScheduledActivitiesListProps> = ({ activities }) => {
+  const navigate = useNavigate();
+
   if (activities.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>
@@ -58,8 +61,10 @@ const ScheduledActivitiesList: React.FC<ScheduledActivitiesListProps> = ({ activ
               p: 2,
               '&:hover': {
                 backgroundColor: 'action.hover',
-              }
+              },
+              cursor: 'pointer' // Add cursor pointer to indicate it's clickable
             }}
+            onClick={() => navigate(`/scheduled-activities/${scheduledActivity.id}`)} // Navigate to detail page
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
               <Typography variant="h6">

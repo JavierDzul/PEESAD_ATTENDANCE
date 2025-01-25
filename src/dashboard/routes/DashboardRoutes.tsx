@@ -14,6 +14,7 @@ import ClassesPage from '../pages/Classes/ClassesPage';
 import TeachingMaterial from '../pages/TeachingMaterial/TeachingMaterialPage';
 import ActivityPage from '../pages/Activity/ActivityPage';
 import CreateScheduleActivityPage from '../pages/ScheduleActivity/CreateScheduleActivityPage';
+import ScheduledActivityDetailsPage from '../pages/ScheduleActivity/ScheduledActivityDetailsPage';
 
 export const DashboardRoutes = () => {
   const selectedClass = useSelector(
@@ -47,6 +48,7 @@ export const DashboardRoutes = () => {
         <Route path="/teaching-material/:subjectId" element={<TeachingMaterial />} />7
         <Route path="/subjects/:subjectId/activities/:id" element={<ActivityPage />} />
         <Route path="/subjects/:subjectId/activities/:activityId/schedule" element={<CreateScheduleActivityPage />} />
+        <Route path="/scheduled-activities/:id" element={<ScheduledActivityDetailsPage />} />
 
       </Routes>
     </DashboardLayout>
