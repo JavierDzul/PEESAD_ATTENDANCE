@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { 
   Box, 
   Typography, 
@@ -9,14 +9,10 @@ import {
   AccordionSummary,
   AccordionDetails,
   Alert,
-  IconButton,
-  Tooltip
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Subject } from '../../../interfaces/subject';
 import ActivityList from './ActivityList';
-import { useGetActivitiesBySubjectQuery } from '../../../services/api/courseSection';
 import { useGetScheduledActivitiesQuery } from '../../../services/api/scheduledActivityApi';
 
 interface ActivitiesTabProps {
@@ -25,49 +21,20 @@ interface ActivitiesTabProps {
 
 const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
   const location = useLocation();
-  const {classId} = location.state;
-
-  const { 
-    data: activitiesData, 
-    isLoading: isLoadingActivities, 
-    error: activitiesError 
-  } = useGetActivitiesBySubjectQuery({
-    subjectId: subject.id!
-  });
+  const { classId } = location.state;
 
   // Obtener scheduled activities
-  const {
-    data: scheduledActivitiesData,
-    isLoading: isLoadingScheduled
+  const { 
+    data: scheduledActivitiesData, 
+    isLoading: isLoadingScheduled, 
+    error: scheduledActivitiesError 
   } = useGetScheduledActivitiesQuery({ 
     classId: classId, 
     page: 1,
     limit: 100 
   });
-console.log(scheduledActivitiesData)
-  const groupedData = React.useMemo(() => {
-    if (!activitiesData?.data) return [];
-    
-    const sectionsMap = new Map();
-    
-    activitiesData.data.forEach(activity => {
-      if (!sectionsMap.has(activity.section.id)) {
-        sectionsMap.set(activity.section.id, {
-          sectionId: activity.section.id,
-          sectionName: activity.section.name,
-          activities: []
-        });
-      }
-      
-      if (activity.title) {
-        sectionsMap.get(activity.section.id).activities.push(activity);
-      }
-    });
-    
-    return Array.from(sectionsMap.values());
-  }, [activitiesData]);
 
-  if (isLoadingActivities || isLoadingScheduled) {
+  if (isLoadingScheduled) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <CircularProgress />
@@ -75,10 +42,10 @@ console.log(scheduledActivitiesData)
     );
   }
 
-  if (activitiesError) {
+  if (scheduledActivitiesError) {
     return (
       <Alert severity="error">
-        Error al cargar las actividades. Por favor, intente nuevamente.
+        Error al cargar las actividades programadas. Por favor, intente nuevamente.
       </Alert>
     );
   }
@@ -96,47 +63,34 @@ console.log(scheduledActivitiesData)
         </Typography>
       </Box>
 
-      {groupedData.length > 0 ? (
-        groupedData.map(({ sectionId, sectionName, activities }) => (
-          <Accordion key={sectionId} defaultExpanded sx={{ mb: 2 }}>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              width: '100%',
-              position: 'relative'
-            }}>
-              <AccordionSummary 
-                expandIcon={<ExpandMoreIcon />}
-                sx={{
-                  flexGrow: 1,
-                  '& .MuiAccordionSummary-content': {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2
-                  }
-                }}
+      {scheduledActivitiesData?.sections.length > 0 ? (
+        scheduledActivitiesData.sections.map(({ section, activities }) => (
+          <Accordion key={section.id} defaultExpanded sx={{ mb: 2 }}>
+            <AccordionSummary 
+              expandIcon={<ExpandMoreIcon />}
+              sx={{
+                flexGrow: 1,
+                '& .MuiAccordionSummary-content': {
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2
+                }
+              }}
+            >
+              <Typography variant="h6">{section.name}</Typography>
+              <Typography 
+                variant="subtitle2" 
+                color="text.secondary"
               >
-                <Typography variant="h6">{sectionName}</Typography>
-                <Typography 
-                  variant="subtitle2" 
-                  color="text.secondary"
-                >
-                  ({activities.length} actividades)
-                </Typography>
-              </AccordionSummary>
-              <Box sx={{ 
-                position: 'absolute',
-                right: '48px',
-                zIndex: 1
-              }}>
-              </Box>
-            </Box>
+                ({activities.length} actividades)
+              </Typography>
+            </AccordionSummary>
             <AccordionDetails>
               <ActivityList 
-                activities={activities}
-                scheduledActivities={scheduledActivitiesData?.items || []}
+                activities={activities.map(activity => activity.activity)}
+                scheduledActivities={activities}
                 subjectId={subject.id!}
-                sectionId={sectionId}
+                sectionId={section.id}
               />
             </AccordionDetails>
           </Accordion>

@@ -1,4 +1,3 @@
-// src/services/api/scheduledActivityApi.ts
 import { ScheduledActivity, CreateScheduledActivity, UpdateScheduledActivity } from "../../interfaces/scheduled-activity";
 import { PaginationQueryParamsType, peesadApi } from "../peesadApi";
 
@@ -17,9 +16,23 @@ export interface ApiResponseAll<T> {
   total: number;
 }
 
+export interface GroupedScheduledActivities {
+  sections: {
+    section: {
+      id: number;
+      name: string;
+      // otros campos de la sección
+    };
+    activities: ScheduledActivity[];
+  }[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 const scheduledActivityApi = peesadApi.injectEndpoints({
   endpoints: (builder) => ({
-    getScheduledActivities: builder.query<ApiResponseAll<ScheduledActivity>, PaginationQueryParamsType & { classId?: number }>({
+    getScheduledActivities: builder.query<ApiResponse<GroupedScheduledActivities>, PaginationQueryParamsType & { classId?: number }>({
       query: ({ page = 1, limit = 10, classId }) => ({
         url: `scheduled-activities?${classId ? `classId=${classId}&` : ''}page=${page}&limit=${limit}`,
         method: 'GET',
@@ -27,7 +40,9 @@ const scheduledActivityApi = peesadApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...(result.data ?? []).map((activity) => ({ type: 'ScheduledActivity' as const, id: activity.id })),
+              ...(result.data?.sections ?? []).flatMap((section) => 
+                section.activities.map((activity) => ({ type: 'ScheduledActivity' as const, id: activity.id }))
+              ),
               { type: 'ScheduledActivity', id: 'LIST' },
             ]
           : [{ type: 'ScheduledActivity', id: 'LIST' }],

@@ -27,7 +27,7 @@ const ScheduledActivitiesTab: React.FC<ScheduledActivitiesTabProps> = ({ subject
     page: 1,
     limit: 100
   });
-  console.log(scheduledActivitiesData);
+
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -44,16 +44,19 @@ const ScheduledActivitiesTab: React.FC<ScheduledActivitiesTabProps> = ({ subject
     );
   }
 
-  const sortedActivities = [...(scheduledActivitiesData?.items || [])].sort(
-    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-  );
-
   return (
     <Box>
       <Typography variant="h5" component="h2" gutterBottom>
         Actividades Programadas
       </Typography>
-      <ScheduledActivitiesList activities={sortedActivities} />
+      {scheduledActivitiesData?.sections.map((section) => (
+        <Box key={section.section.id} mb={4}>
+          <Typography variant="h6" component="h3">
+            {section.section.name}
+          </Typography>
+          <ScheduledActivitiesList activities={section.activities} />
+        </Box>
+      ))}
     </Box>
   );
 };
