@@ -1,18 +1,19 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import Swal from 'sweetalert2'
-import { useEditCourseSectionMutation } from '../../../services/api/courseSection';
+import { useSwitchControlSyllabusMutation } from '../../../services/api/courseSection';
 
 
 interface Props {
   isActive?: boolean,
   courseSectionId?: number,
+  classId?: any,
   setIsLoading: Dispatch<SetStateAction<boolean>>
 }
 
-export const SwitchControl: FC<Props> = ({ isActive = false, courseSectionId, setIsLoading }) => {
+export const SwitchControl: FC<Props> = ({ isActive = false, courseSectionId, setIsLoading, classId }) => {
 
   const [value, setValue] = useState<boolean | undefined>(isActive)
-  const [editCourseSection] = useEditCourseSectionMutation();
+  const [editCourseSection] = useSwitchControlSyllabusMutation();
 
   const handleOnChange = async () => {
     if (courseSectionId === undefined) {
@@ -35,12 +36,11 @@ export const SwitchControl: FC<Props> = ({ isActive = false, courseSectionId, se
     setIsLoading(true);
     try {
     
-    console.log( await editCourseSection({ id: courseSectionId, isActive: formData.isActive }))
+    editCourseSection({ sectionId: courseSectionId, classId:classId})
     
     }
     catch(e){
 
-      console.log(e);
     }
     setValue(old => !old);
     setIsLoading(false);

@@ -1,8 +1,6 @@
 // src/components/Sections/SectionsList.tsx
 import React, { useState } from 'react';
-import { useEditCourseSectionMutation } from '../../../services/api/courseSection';
 import { SwitchControl } from "./SwitchControlSection";
-import { CourseSection } from "../../../interfaces/course-section";
 
 import { 
   List, 
@@ -95,7 +93,7 @@ const SectionsList: React.FC<SectionsListProps> = ({ subjectId }) => {
                       setIsLoading={setIsLoading} // Aquí pasas el setter de estado
                       isActive={section.isActive}
                       courseSectionId={section.id}
-                      classId={section}
+                      classId={1}
                     />
                   </div>
                 </Box>
