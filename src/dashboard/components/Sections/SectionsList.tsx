@@ -1,16 +1,18 @@
 // src/components/Sections/SectionsList.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import { useEditCourseSectionMutation } from '../../../services/api/courseSection';
+import { SwitchControl } from "./SwitchControlSection";
+import { CourseSection } from "../../../interfaces/course-section";
+
 import { 
   List, 
-  ListItem, 
   Paper, 
   Typography,
   CircularProgress,
   Box,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  Divider
+  AccordionDetails
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useGetCourseSectionsQuery } from '../../../services/api/courseSection';
@@ -20,12 +22,14 @@ interface SectionsListProps {
 }
 
 const SectionsList: React.FC<SectionsListProps> = ({ subjectId }) => {
-  const { data, isLoading, error } = useGetCourseSectionsQuery({
+  const [isLoading, setIsLoading] = useState(false);
+  const { data, error } = useGetCourseSectionsQuery({
     subjectId,
     limit: 50,
     isActive: true
   });
 
+  console.log(data)
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" p={3}>
@@ -85,6 +89,15 @@ const SectionsList: React.FC<SectionsListProps> = ({ subjectId }) => {
                   >
                     {`${index + 1}. ${section.name}`}
                   </Typography>
+                  {/* Botón "Deshabilitar" */}
+                  <div className="form-check form-switch">
+                    <SwitchControl
+                      setIsLoading={setIsLoading} // Aquí pasas el setter de estado
+                      isActive={section.isActive}
+                      courseSectionId={section.id}
+                      classId={section}
+                    />
+                  </div>
                 </Box>
               </AccordionSummary>
               <AccordionDetails sx={{ p: 3 }}>

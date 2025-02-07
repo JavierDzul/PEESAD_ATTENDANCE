@@ -72,6 +72,13 @@ const courseSectionApi = peesadApi.injectEndpoints({
       }),
       invalidatesTags: (result) => [{ type: 'CourseSection', id: result?.data?.id }, { type: 'CourseSection', id: 'LIST' }],
     }),
+    switchControlSyllabus: builder.mutation<ApiResponse<any>, { sectionId: number, classId: number }>({
+      query: ({ sectionId, classId }) => ({
+        url: `switch-syllabus/${sectionId}/${classId}`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: [{ type: 'CourseSection', id: 'LIST' }],
+    }),
   }),
   overrideExisting: 'throw',
 });
@@ -82,5 +89,6 @@ export const {
   useGetCourseSectionQuery,
   useAddCourseSectionMutation,
   useEditCourseSectionMutation,
-  useGetActivitiesBySubjectQuery
+  useGetActivitiesBySubjectQuery,
+  useSwitchControlSyllabusMutation
 } = courseSectionApi;

@@ -10,6 +10,7 @@ export interface CourseSection {
     createdAt: Date;
     updatedAt: Date;
     deleted: boolean;
+    isActive?: boolean;
   }
   
   export interface CreateCourseSection {
@@ -24,4 +25,5 @@ export interface CourseSection {
     content?: string;
     position?: number;
     subjectId?: number;
+    isActive?: boolean
   }

@@ -156,7 +156,7 @@ const ClassesPage: React.FC = () => {
                 <Button 
                     size="small" 
                     color="primary"
-                    onClick={() => navigate(`/teaching-material/${classItem.subject.id}`, {
+                    onClick={() => navigate(`/teaching-material/${classItem}`, {
                     state: {
                         id: classItem.subject.id,
                         name: classItem.subject.name,
