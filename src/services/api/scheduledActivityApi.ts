@@ -32,7 +32,7 @@ export interface GroupedScheduledActivities {
 
 const scheduledActivityApi = peesadApi.injectEndpoints({
   endpoints: (builder) => ({
-    getScheduledActivities: builder.query<ApiResponse<GroupedScheduledActivities>, PaginationQueryParamsType & { classId?: number }>({
+    getScheduledActivities: builder.query<any, PaginationQueryParamsType & { classId?: number }>({
       query: ({ page = 1, limit = 10, classId }) => ({
         url: `scheduled-activities?${classId ? `classId=${classId}&` : ''}page=${page}&limit=${limit}`,
         method: 'GET',
@@ -40,7 +40,7 @@ const scheduledActivityApi = peesadApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...(result.data?.sections ?? []).flatMap((section) => 
+              ...(result.data?.sections ?? []).flatMap((section: { activities: any[]; }) => 
                 section.activities.map((activity) => ({ type: 'ScheduledActivity' as const, id: activity.id }))
               ),
               { type: 'ScheduledActivity', id: 'LIST' },
@@ -48,7 +48,7 @@ const scheduledActivityApi = peesadApi.injectEndpoints({
           : [{ type: 'ScheduledActivity', id: 'LIST' }],
     }),
 
-    getScheduledActivity: builder.query<ApiResponse<ScheduledActivity>, { id: number }>({
+    getScheduledActivity: builder.query<ApiResponse<any>, { id: number }>({
       query: ({ id }) => ({
         url: `scheduled-activities/${id}`,
         method: 'GET',

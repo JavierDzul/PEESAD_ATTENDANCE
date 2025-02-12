@@ -64,7 +64,7 @@ const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
       </Box>
 
       {scheduledActivitiesData?.sections.length > 0 ? (
-        scheduledActivitiesData.sections.map(({ section, activities }) => (
+        scheduledActivitiesData.sections.map(({ section, activities }: { section: any, activities: any[] }) => (
           <Accordion key={section.id} defaultExpanded sx={{ mb: 2 }}>
             <AccordionSummary 
               expandIcon={<ExpandMoreIcon />}
@@ -87,7 +87,7 @@ const ActivitiesTab: React.FC<ActivitiesTabProps> = ({ subject }) => {
             </AccordionSummary>
             <AccordionDetails>
               <ActivityList 
-                activities={activities.map(activity => activity.activity)}
+                activities={activities.map((activity: { activity: any; }) => activity.activity)}
                 scheduledActivities={activities}
                 subjectId={subject.id!}
                 sectionId={section.id}

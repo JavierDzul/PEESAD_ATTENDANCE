@@ -83,7 +83,7 @@ const ScheduledActivitiesList: React.FC<ScheduledActivitiesListProps> = ({ activ
                 : scheduledActivity.activity.content}
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: 2, color: 'text.secondary' }}>
+            <Box sx={{ display: 'flex', gap: 2, color: 'text.secondary' }}> 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <CalendarTodayIcon fontSize="small" />
                 <Typography variant="body2">

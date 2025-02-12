@@ -7,7 +7,7 @@ import { useGetScheduledActivityQuery } from '../../../services/api/scheduledAct
 
 const ScheduledActivityDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: scheduledActivity, isLoading, error } = useGetScheduledActivityQuery({ id: parseInt(id as string, 10) });
+  const { data: scheduledActivity, isLoading, error } = useGetScheduledActivityQuery({ id: parseInt(id as string, 10) }) as any;
 
   if (isLoading) {
     return (

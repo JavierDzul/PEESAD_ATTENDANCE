@@ -68,6 +68,18 @@ const classApi = peesadApi.injectEndpoints({
       }),
       providesTags: ['Partial'],
     }),
+    getClassesByStudentId: build.query<
+    ApiResponseAll<Class>,
+    PaginationQueryType & { studentId: number }
+  >({
+    query: ({ page = 1, pageSize = 10, isActive, studentId }) => ({
+      url: `class/findAllStudent?page=${page}&pageSize=${pageSize}&studentId=${studentId}${
+        isActive ? '&isCurrent=' + isActive : ''
+      }`,
+      method: 'GET',
+    }),
+    providesTags: ['Classes'],
+  }),
   }),
   overrideExisting: 'throw',
 });

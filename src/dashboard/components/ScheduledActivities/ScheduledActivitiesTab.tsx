@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { Subject } from '../../../interfaces/subject';
 import { useGetScheduledActivitiesQuery } from '../../../services/api/scheduledActivityApi';
 import ScheduledActivitiesList from './ScheduledActivitiesList';
+import { ScheduledActivity } from '../../../interfaces/scheduled-activity';
 
 interface ScheduledActivitiesTabProps {
   subject: Subject;
@@ -49,7 +50,7 @@ const ScheduledActivitiesTab: React.FC<ScheduledActivitiesTabProps> = ({ subject
       <Typography variant="h5" component="h2" gutterBottom>
         Actividades Programadas
       </Typography>
-      {scheduledActivitiesData?.sections.map((section) => (
+      {scheduledActivitiesData?.sections.map((section: { section: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; activities: ScheduledActivity[]; }) => (
         <Box key={section.section.id} mb={4}>
           <Typography variant="h6" component="h3">
             {section.section.name}
