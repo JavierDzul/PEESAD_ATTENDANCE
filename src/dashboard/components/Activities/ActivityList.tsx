@@ -28,15 +28,15 @@ const ActivityList: React.FC<ActivityListProps> = ({
   sectionId 
 }) => {
   const location = useLocation();
-  const {classId} = location.state;
+  const { classId } = location.state;
   const navigate = useNavigate();
-  console.log(scheduledActivities)
+
   const isActivityScheduled = (activityId: number) => {
     return scheduledActivities.some(sa => sa.activity.id === activityId);
-  };  
+  };
 
   const getScheduleInfo = (activityId: number) => {
-    const schedule = scheduledActivities.find(sa => sa.activity.id=== activityId);
+    const schedule = scheduledActivities.find(sa => sa.activity.id === activityId);
     if (schedule) {
       return {
         startDate: new Date(schedule.startDate).toLocaleDateString(),
@@ -45,16 +45,17 @@ const ActivityList: React.FC<ActivityListProps> = ({
     }
     return null;
   };
-  const truncateHtmlContent = (htmlContent:string, maxLength = 150) => {
+
+  const truncateHtmlContent = (htmlContent: string, maxLength = 150) => {
     const div = document.createElement('div');
     div.innerHTML = htmlContent;
     let text = div.textContent || div.innerText || '';
-  if (text.length > maxLength) {
+    if (text.length > maxLength) {
         text = text.substring(0, maxLength) + '...';
     }
-    
     return text;
-};
+  };
+
   return (
     <>  
       {activities.map((activity, index) => {
@@ -63,7 +64,6 @@ const ActivityList: React.FC<ActivityListProps> = ({
         return (
           <Paper 
             key={activity.id} 
-
             elevation={1} 
             sx={{ 
               p: 2, 
@@ -82,20 +82,18 @@ const ActivityList: React.FC<ActivityListProps> = ({
                   fontWeight="bold" 
                   sx={{ cursor: 'pointer' }}
                   onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}`)}
-                  
                 >
                   {activity.title}
                 </Typography>
                 <Typography 
-    variant="body2" 
-    color="text.secondary"
-    sx={{ mt: 1 }}
->
-    {truncateHtmlContent(activity.content)}
-</Typography>
+                  variant="body2" 
+                  color="text.secondary"
+                  sx={{ mt: 1 }}
+                >
+                  {truncateHtmlContent(activity.content)}
+                </Typography>
               </Box>
               <Box sx={{ ml: 2 }}>
-                
                 {scheduled ? (
                   <Tooltip title={`Programada: ${scheduleInfo?.startDate} - ${scheduleInfo?.endDate}`}>
                     <Chip
@@ -111,10 +109,10 @@ const ActivityList: React.FC<ActivityListProps> = ({
                     variant="outlined"
                     size="small"
                     startIcon={<CalendarTodayIcon />}
-                    onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}/schedule`,{
+                    onClick={() => navigate(`/subjects/${subjectId}/activities/${activity.id}/schedule`, {
                       state: {
                         classId
-                    }
+                      }
                     })}
                   >
                     Programar

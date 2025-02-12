@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { Subject } from '../../../interfaces/subject';
 import { useGetScheduledActivitiesQuery } from '../../../services/api/scheduledActivityApi';
 import ScheduledActivitiesList from './ScheduledActivitiesList';
+import { ScheduledActivity } from '../../../interfaces/scheduled-activity';
 
 interface ScheduledActivitiesTabProps {
   subject: Subject;
@@ -27,7 +28,7 @@ const ScheduledActivitiesTab: React.FC<ScheduledActivitiesTabProps> = ({ subject
     page: 1,
     limit: 100
   });
-  console.log(scheduledActivitiesData);
+
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -44,16 +45,19 @@ const ScheduledActivitiesTab: React.FC<ScheduledActivitiesTabProps> = ({ subject
     );
   }
 
-  const sortedActivities = [...(scheduledActivitiesData?.items || [])].sort(
-    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-  );
-
   return (
     <Box>
       <Typography variant="h5" component="h2" gutterBottom>
         Actividades Programadas
       </Typography>
-      <ScheduledActivitiesList activities={sortedActivities} />
+      {scheduledActivitiesData?.sections.map((section: { section: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }; activities: ScheduledActivity[]; }) => (
+        <Box key={section.section.id} mb={4}>
+          <Typography variant="h6" component="h3">
+            {section.section.name}
+          </Typography>
+          <ScheduledActivitiesList activities={section.activities} />
+        </Box>
+      ))}
     </Box>
   );
 };

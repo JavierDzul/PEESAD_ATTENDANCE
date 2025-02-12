@@ -10,10 +10,17 @@ import {
   Switch,
   Box,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Divider,
+  Typography
 } from '@mui/material';
-import { Weight, SectionWeight } from '../../../interfaces/weight';
-import { useUpdateWeightMutation } from '../../../services/api/weightApi';
+import { Weight, SectionWeight, ActivityWeight } from '../../../interfaces/weight';
+import { useUpdateWeightMutation, useCreateActivityWeightMutation, useGetActivityWeightsQuery, useDeleteActivityWeightMutation } from '../../../services/api/weightApi';
+import { useGetScheduledActivitiesQuery } from '../../../services/api/scheduledActivityApi';
+import ActivityWeightList from './ActivityWeightList';
+import AddActivityWeightForm from './AddActivityWeightForm';
+import { useLocation } from 'react-router-dom';
+import { Subject } from '../../../interfaces/subject';
 
 interface EditWeightDialogProps {
   open: boolean;
@@ -28,6 +35,10 @@ const EditWeightDialog: React.FC<EditWeightDialogProps> = ({
   weight,
   sectionWeight
 }) => {
+  
+  const location = useLocation();
+
+  const subject = location.state as Subject;
   const [formData, setFormData] = useState({
     name: '',
     percentage: 0,
@@ -36,7 +47,12 @@ const EditWeightDialog: React.FC<EditWeightDialogProps> = ({
   const [error, setError] = useState<string>('');
 
   const [updateWeight, { isLoading }] = useUpdateWeightMutation();
-
+  const [createActivityWeight] = useCreateActivityWeightMutation();
+  const { data: activityWeightsData, refetch: refetchActivityWeights } = useGetActivityWeightsQuery({ scheduledActivityId: weight?.id || 0 });
+  const { data: scheduledActivitiesData } = useGetScheduledActivitiesQuery({ classId: subject.classId });
+  const [deleteActivityWeight] = useDeleteActivityWeightMutation();
+  console.log(weight)
+console.log(activityWeightsData)
   useEffect(() => {
     if (weight) {
       setFormData({
@@ -82,7 +98,7 @@ const EditWeightDialog: React.FC<EditWeightDialogProps> = ({
         isManual: formData.isManual
       }).unwrap();
 
-      if (result.status!=false) {
+      if (result.status) {
         onClose();
       } else {
         setError(result.message || 'Error al actualizar el peso');
@@ -98,6 +114,42 @@ const EditWeightDialog: React.FC<EditWeightDialogProps> = ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const handleAddActivityWeight = async (scheduledActivityId: number, percentage: number) => {
+    if (!weight) return;
+
+    try {
+      const result = await createActivityWeight({
+        scheduledActivityId,
+        weightId: weight.id,
+        percentage
+      }).unwrap();
+
+      if (result.status!=false) {
+        refetchActivityWeights();
+      } else {
+        console.log(error)
+
+        setError(result.message || 'Error al agregar el peso de la actividad');
+      }
+    } catch (error: any) {
+      console.log(error)
+      setError(error.data?.message || 'Error al agregar el peso de la actividad');
+    }
+  };
+
+  const handleDeleteActivityWeight = async (id: number) => {
+    try {
+      const result = await deleteActivityWeight({ id }).unwrap();
+      if (result.status) {
+        refetchActivityWeights();
+      } else {
+        setError(result.message || 'Error al eliminar el peso de la actividad');
+      }
+    } catch (error: any) {
+      setError(error.data?.message || 'Error al eliminar el peso de la actividad');
+    }
   };
 
   return (
@@ -161,6 +213,21 @@ const EditWeightDialog: React.FC<EditWeightDialogProps> = ({
                 Las calificaciones para este peso deberán ser ingresadas manualmente
               </Alert>
             )}
+
+            <Divider sx={{ my: 2 }} />
+
+            <Box>
+              <Typography variant="h6">Pesos de Actividades</Typography>
+              <ActivityWeightList
+                activityWeights={activityWeightsData || []}
+                onDelete={handleDeleteActivityWeight}
+              />
+            </Box>
+
+            <AddActivityWeightForm
+              scheduledActivities={scheduledActivitiesData?.items || []}
+              onAdd={handleAddActivityWeight}
+            />
           </Box>
         </DialogContent>
         <DialogActions>

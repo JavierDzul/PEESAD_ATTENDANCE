@@ -6,6 +6,7 @@ export interface Subject {
   clave: string;
   isActive: boolean;
   semester: number;
+  classId? : number
   // classess: Class[];
   // //   TODO: confirm if subject-career relationship is necessary
   career: Career;
